@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ChangeEvent } from "react";
 import { LayoutDashboard, Shield, Users, Wallet, Package, Bell, StickyNote, Trophy, FileText, Settings, Search, Plus, Menu, X, Pencil, Trash2, Download, Upload, Check, Gamepad2 } from "lucide-react";
 
 type Key = "teams"|"players"|"finance"|"inventory"|"tournaments"|"contracts"|"reminders"|"notes";
@@ -29,10 +29,10 @@ export default function Home(){
  const title=active==="dashboard"?"Genel Bakış":active==="settings"?"Ayarlar":config[active as Key]?.title;
  const rows=useMemo(()=>config[active as Key]?db[active as Key].filter(x=>JSON.stringify(x).toLocaleLowerCase("tr").includes(search.toLocaleLowerCase("tr"))):[],[db,active,search]);
  function add(key:Key){setEdit(null);setModal(key)}
- function save(e:React.FormEvent<HTMLFormElement>){e.preventDefault();if(!modal)return;const fd=new FormData(e.currentTarget);const values:any={};config[modal].fields.forEach((f:any)=>values[f[0]]=String(fd.get(f[0])||""));if(edit)setDb(s=>({...s,[modal]:s[modal].map(x=>x.id===edit.id?{...x,...values}:x)}));else setDb(s=>({...s,[modal]:[{id:uid(),created:new Date().toISOString(),...values,done:false},...s[modal]]}));setToast(config[modal].one+" kaydedildi.");setModal(null);setEdit(null)}
+ function save(e:FormEvent<HTMLFormElement>){e.preventDefault();if(!modal)return;const fd=new FormData(e.currentTarget);const values:any={};config[modal].fields.forEach((f:any)=>values[f[0]]=String(fd.get(f[0])||""));if(edit)setDb(s=>({...s,[modal]:s[modal].map(x=>x.id===edit.id?{...x,...values}:x)}));else setDb(s=>({...s,[modal]:[{id:uid(),created:new Date().toISOString(),...values,done:false},...s[modal]]}));setToast(config[modal].one+" kaydedildi.");setModal(null);setEdit(null)}
  function del(k:Key,id:string){if(confirm("Bu kayıt silinsin mi?")){setDb(s=>({...s,[k]:s[k].filter(x=>x.id!==id)}));setToast("Kayıt silindi.")}}
  function backup(){const a=document.createElement("a");const u=URL.createObjectURL(new Blob([JSON.stringify({db,org},null,2)],{type:"application/json"}));a.href=u;a.download="esports-manager-yedek.json";a.click();URL.revokeObjectURL(u)}
- async function restore(e:React.ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.db)throw 0;setDb({...blank,...x.db});setOrg(x.org||"Organizasyonum");setToast("Yedek geri yüklendi.")}catch{setToast("Geçerli yedek dosyası seç.")}e.target.value=""}
+ async function restore(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.db)throw 0;setDb({...blank,...x.db});setOrg(x.org||"Organizasyonum");setToast("Yedek geri yüklendi.")}catch{setToast("Geçerli yedek dosyası seç.")}e.target.value=""}
  const list=active as Key; const C=config[list];
  return <main className="shell">
  <aside className={"sidebar "+(mobile?"open":"")}><div className="brand"><div className="brand-mark"><Gamepad2 size={21}/></div><div><b>ESPORTS<span>MANAGER</span></b><small>ORGANIZATION CONTROL</small></div><button className="close-mobile" onClick={()=>setMobile(false)}><X/></button></div><div className="workspace"><div className="workspace-icon">EM</div><div><b>{org}</b><small>Kişisel çalışma alanı</small></div></div>{nav.map((g:any)=><div className="nav-group" key={g[0]}><p>{g[0]}</p>{g[1].map((it:any)=>{const I=it[2];return <button key={it[0]} className={"nav-item "+(active===it[0]?"selected":"")} onClick={()=>{setActive(it[0]);setSearch("");setMobile(false)}}><I size={18}/><span>{it[1]}</span>{it[0]==="reminders"&&pending.length>0&&<i>{pending.length}</i>}</button>})}</div>)}<div className="sidebar-bottom"><div className="help">Kayıtlar bu tarayıcıda saklanır.</div><div className="profile"><div className="avatar">A</div><div><b>Organizasyon sahibi</b><small>Yönetim paneli</small></div></div></div></aside>
