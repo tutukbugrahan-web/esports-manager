@@ -1,60 +1,55 @@
- "use client";
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import { LayoutDashboard, Shield, Users, Wallet, Package, Bell, StickyNote, Trophy, FileText, Settings, Search, Plus, Menu, X, Pencil, Trash2, Download, Upload, Check, Gamepad2 } from "lucide-react";
 
-import { useState } from "react";
-import {
-  LayoutDashboard, Shield, Users, Wallet, Package, Bell, StickyNote,
-  Trophy, FileText, Settings, Search, Plus, TrendingUp, TrendingDown,
-  CalendarDays, ChevronDown, Menu, X, Gamepad2, CircleHelp
-} from "lucide-react";
-
-const nav = [
-  { title: "GENEL", items: [{name:"Genel Bakış", icon:LayoutDashboard},{name:"Takımlar",icon:Shield},{name:"Oyuncular",icon:Users}] },
-  { title: "YÖNETİM", items: [{name:"Muhasebe",icon:Wallet},{name:"İhtiyaç & Envanter",icon:Package},{name:"Turnuvalar",icon:Trophy},{name:"Sözleşmeler",icon:FileText}] },
-  { title: "ARAÇLAR", items: [{name:"Hatırlatıcılar",icon:Bell},{name:"Notlar",icon:StickyNote},{name:"Ayarlar",icon:Settings}] }
-];
-
-const stats = [
-  {label:"TOPLAM TAKIM",value:"0",sub:"Henüz takım eklenmedi",icon:Shield,tone:"violet"},
-  {label:"AKTİF OYUNCU",value:"0",sub:"Oyuncu kayıtlarını bekliyor",icon:Users,tone:"blue"},
-  {label:"TOPLAM GELİR",value:"₺0,00",sub:"Bu ay",icon:TrendingUp,tone:"green"},
-  {label:"TOPLAM GİDER",value:"₺0,00",sub:"Bu ay",icon:TrendingDown,tone:"red"}
-];
-
-export default function Home() {
-  const [active, setActive] = useState("Genel Bakış");
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [teamName, setTeamName] = useState("");
-  const [teams, setTeams] = useState<string[]>([]);
-
-  function addTeam(e: React.FormEvent) {
-    e.preventDefault();
-    if (teamName.trim()) { setTeams([...teams, teamName.trim()]); setTeamName(""); setShowNew(false); setActive("Takımlar"); }
-  }
-
-  return <main className="shell">
-    <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-      <div className="brand"><div className="brand-mark"><Gamepad2 size={21}/></div><div><b>ESPORTS<span>MANAGER</span></b><small>ORGANIZATION CONTROL</small></div><button className="close-mobile" onClick={()=>setMobileOpen(false)}><X/></button></div>
-      <div className="workspace"><div className="workspace-icon">EM</div><div><b>My Organization</b><small>Personal workspace</small></div><ChevronDown size={15}/></div>
-      {nav.map(group=><div className="nav-group" key={group.title}><p>{group.title}</p>{group.items.map(item=><button key={item.name} onClick={()=>{setActive(item.name);setMobileOpen(false)}} className={`nav-item ${active===item.name?"selected":""}`}><item.icon size={18}/><span>{item.name}</span>{item.name==="Hatırlatıcılar"&&<i>0</i>}</button>)}</div>)}
-      <div className="sidebar-bottom"><div className="help"><CircleHelp size={17}/><span>Yardım & Destek</span></div><div className="profile"><div className="avatar">A</div><div><b>Yönetici</b><small>Owner account</small></div><Settings size={16}/></div></div>
-    </aside>
-    {mobileOpen&&<div className="scrim" onClick={()=>setMobileOpen(false)}/>}
-    <section className="main">
-      <header className="topbar"><button className="mobile-menu" onClick={()=>setMobileOpen(true)}><Menu/></button><div className="crumb">Workspace <span>/</span> <b>{active}</b></div><div className="top-actions"><div className="search"><Search size={16}/><input placeholder="Ara..." /></div><button className="icon-btn"><Bell size={18}/><i/></button><div className="top-avatar">A</div></div></header>
-      <div className="content">
-        <div className="welcome-row"><div><div className="eyebrow">27 KASIM 2026 · PERŞEMBE</div><h1>{active==="Genel Bakış"?"Kontrol Merkezi":active}</h1><p>Organizasyonunun tüm operasyonlarını tek yerden yönet.</p></div><button className="primary" onClick={()=>setShowNew(true)}><Plus size={17}/> Yeni Takım</button></div>
-        {active==="Genel Bakış" ? <>
-          <div className="stats">{stats.map(s=><div className="stat-card" key={s.label}><div className="stat-top"><span>{s.label}</span><div className={`stat-icon ${s.tone}`}><s.icon size={18}/></div></div><strong>{s.value}</strong><small>{s.sub}</small></div>)}</div>
-          <div className="dashboard-grid">
-            <div className="panel wide"><div className="panel-head"><div><h2>Finansal Özet</h2><p>Gelir ve gider hareketlerin</p></div><button className="period">Bu ay <ChevronDown size={14}/></button></div><div className="empty-chart"><div className="chart-icon"><Wallet size={22}/></div><b>Henüz finansal veri yok</b><span>Gelir veya gider eklediğinde grafik burada görüntülenecek.</span></div></div>
-            <div className="panel"><div className="panel-head"><div><h2>Hatırlatıcılar</h2><p>Yaklaşan işler</p></div><button className="text-btn" onClick={()=>setActive("Hatırlatıcılar")}>Tümünü gör</button></div><div className="empty-small"><Bell size={20}/><span>Bekleyen hatırlatıcı bulunmuyor.</span></div></div>
-            <div className="panel"><div className="panel-head"><div><h2>Takımlarım</h2><p>Organizasyon kadroları</p></div><button className="text-btn" onClick={()=>setActive("Takımlar")}>Tümünü gör</button></div>{teams.length===0?<div className="empty-small"><Shield size={20}/><span>Henüz takım oluşturmadın.</span><button onClick={()=>setShowNew(true)}>İlk takımını ekle</button></div>:<div className="team-list">{teams.map((t,i)=><div className="team-row" key={i}><div className="team-badge">{t.slice(0,2).toUpperCase()}</div><b>{t}</b><span>Aktif</span></div>)}</div>}</div>
-            <div className="panel"><div className="panel-head"><div><h2>Son İşlemler</h2><p>En son kaydedilen hareketler</p></div></div><div className="empty-small"><CalendarDays size={20}/><span>Henüz işlem kaydedilmedi.</span></div></div>
-          </div>
-        </> : active==="Takımlar" ? <div className="panel"><div className="panel-head"><div><h2>Takım Listesi</h2><p>Oluşturduğun tüm takımlar</p></div><button className="primary small" onClick={()=>setShowNew(true)}><Plus size={15}/> Takım Ekle</button></div>{teams.length===0?<div className="empty-chart"><Shield size={25}/><b>Henüz takım yok</b><span>İlk takımını oluşturarak organizasyonunu yönetmeye başla.</span></div>:<div className="team-list">{teams.map((t,i)=><div className="team-row" key={i}><div className="team-badge">{t.slice(0,2).toUpperCase()}</div><b>{t}</b><span>Aktif</span></div>)}</div>}</div> : <div className="panel empty-section"><div className="chart-icon"><Settings size={22}/></div><h2>{active} modülü hazırlanıyor</h2><p>Bu bölümün veritabanı bağlantısı ve kayıt ekranları sonraki geliştirme adımında eklenecek.</p></div>}
-      </div>
-    </section>
-    {showNew&&<div className="modal-backdrop" onClick={()=>setShowNew(false)}><form className="modal" onSubmit={addTeam} onClick={e=>e.stopPropagation()}><div className="modal-head"><div><h2>Yeni Takım Oluştur</h2><p>Organizasyonuna yeni bir takım ekle.</p></div><button type="button" className="icon-btn" onClick={()=>setShowNew(false)}><X size={18}/></button></div><label>Takım adı</label><input autoFocus value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="Örn. Team Alpha" required/><div className="modal-actions"><button type="button" className="secondary" onClick={()=>setShowNew(false)}>Vazgeç</button><button className="primary" type="submit"><Plus size={16}/> Takım Oluştur</button></div></form></div>}
-  </main>;
+type Key = "teams"|"players"|"finance"|"inventory"|"tournaments"|"contracts"|"reminders"|"notes";
+type Row = {id:string; [key:string]:any};
+const blank:Record<Key,Row[]> = {teams:[],players:[],finance:[],inventory:[],tournaments:[],contracts:[],reminders:[],notes:[]};
+const config:Record<Key,any> = {
+ teams:{title:"Takımlar",one:"Takım",icon:Shield,fields:[["name","Takım adı"],["game","Oyun"],["status","Durum"],["description","Açıklama"]]},
+ players:{title:"Oyuncular",one:"Oyuncu",icon:Users,fields:[["nickname","Oyuncu nicki"],["real_name","Ad soyad"],["player_id","Oyun ID"],["team","Takım"],["role","Rol"],["status","Durum"],["phone","Telefon"],["email","E-posta"],["salary","Aylık ücret (₺)"],["joined","Katılım tarihi"],["notes","Notlar"]]},
+ finance:{title:"Muhasebe",one:"İşlem",icon:Wallet,fields:[["kind","Tür (Gelir/Gider)"],["category","Kategori"],["amount","Tutar (₺)"],["date","Tarih"],["team","Takım"],["player","Oyuncu"],["status","Ödeme durumu"],["description","Açıklama"]]},
+ inventory:{title:"İhtiyaç & Envanter",one:"Envanter kaydı",icon:Package,fields:[["item","Ürün / ihtiyaç"],["quantity","Adet"],["cost","Birim maliyet (₺)"],["direction","Kayıt türü"],["team","Takım"],["player","Oyuncu"],["status","Durum"],["notes","Notlar"]]},
+ tournaments:{title:"Turnuvalar",one:"Turnuva",icon:Trophy,fields:[["name","Turnuva adı"],["organizer","Organizatör"],["team","Takım"],["start","Başlangıç tarihi"],["end","Bitiş tarihi"],["entry","Katılım ücreti"],["prize","Ödül (₺)"],["placement","Derece"],["status","Durum"],["notes","Notlar"]]},
+ contracts:{title:"Sözleşmeler",one:"Sözleşme",icon:FileText,fields:[["title","Sözleşme başlığı"],["team","Takım"],["player","Oyuncu"],["start","Başlangıç"],["end","Bitiş"],["amount","Aylık ücret (₺)"],["status","Durum"],["document","Belge bağlantısı"],["notes","Notlar"]]},
+ reminders:{title:"Hatırlatıcılar",one:"Hatırlatıcı",icon:Bell,fields:[["title","Hatırlatıcı"],["due","Tarih ve saat"],["team","Takım"],["details","Detay"]]},
+ notes:{title:"Notlar",one:"Not",icon:StickyNote,fields:[["title","Not başlığı"],["team","Takım"],["player","Oyuncu"],["body","Not içeriği"]]}
+};
+const nav=[["GENEL",[["dashboard","Genel Bakış",LayoutDashboard],["teams","Takımlar",Shield],["players","Oyuncular",Users]]],["YÖNETİM",[["finance","Muhasebe",Wallet],["inventory","İhtiyaç & Envanter",Package],["tournaments","Turnuvalar",Trophy],["contracts","Sözleşmeler",FileText]]],["ARAÇLAR",[["reminders","Hatırlatıcılar",Bell],["notes","Notlar",StickyNote],["settings","Ayarlar",Settings]]]] as any;
+const money=(n:any)=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY"}).format(Number(n)||0);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+export default function Home(){
+ const [db,setDb]=useState(blank); const [ready,setReady]=useState(false); const [active,setActive]=useState("dashboard"); const [mobile,setMobile]=useState(false); const [search,setSearch]=useState(""); const [modal,setModal]=useState<Key|null>(null); const [edit,setEdit]=useState<Row|null>(null); const [toast,setToast]=useState(""); const [org,setOrg]=useState("Organizasyonum");
+ useEffect(()=>{try{const x=localStorage.getItem("esports-manager-v3");if(x){const v=JSON.parse(x);setDb({...blank,...v.db});setOrg(v.org||"Organizasyonum")}}catch{}setReady(true)},[]);
+ useEffect(()=>{if(ready)localStorage.setItem("esports-manager-v3",JSON.stringify({db,org}))},[db,org,ready]);
+ useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(""),2500);return()=>clearTimeout(t)},[toast]);
+ const income=db.finance.filter(x=>x.kind?.toLowerCase().includes("gelir")).reduce((a,x)=>a+Number(x.amount||0),0);
+ const expense=db.finance.filter(x=>x.kind?.toLowerCase().includes("gider")).reduce((a,x)=>a+Number(x.amount||0),0);
+ const pending=db.reminders.filter(x=>!x.done);
+ const title=active==="dashboard"?"Genel Bakış":active==="settings"?"Ayarlar":config[active as Key]?.title;
+ const rows=useMemo(()=>config[active as Key]?db[active as Key].filter(x=>JSON.stringify(x).toLocaleLowerCase("tr").includes(search.toLocaleLowerCase("tr"))):[],[db,active,search]);
+ function add(key:Key){setEdit(null);setModal(key)}
+ function save(e:React.FormEvent<HTMLFormElement>){e.preventDefault();if(!modal)return;const fd=new FormData(e.currentTarget);const values:any={};config[modal].fields.forEach((f:any)=>values[f[0]]=String(fd.get(f[0])||""));if(edit)setDb(s=>({...s,[modal]:s[modal].map(x=>x.id===edit.id?{...x,...values}:x)}));else setDb(s=>({...s,[modal]:[{id:uid(),created:new Date().toISOString(),...values,done:false},...s[modal]]}));setToast(config[modal].one+" kaydedildi.");setModal(null);setEdit(null)}
+ function del(k:Key,id:string){if(confirm("Bu kayıt silinsin mi?")){setDb(s=>({...s,[k]:s[k].filter(x=>x.id!==id)}));setToast("Kayıt silindi.")}}
+ function backup(){const a=document.createElement("a");const u=URL.createObjectURL(new Blob([JSON.stringify({db,org},null,2)],{type:"application/json"}));a.href=u;a.download="esports-manager-yedek.json";a.click();URL.revokeObjectURL(u)}
+ async function restore(e:React.ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.db)throw 0;setDb({...blank,...x.db});setOrg(x.org||"Organizasyonum");setToast("Yedek geri yüklendi.")}catch{setToast("Geçerli yedek dosyası seç.")}e.target.value=""}
+ const list=active as Key; const C=config[list];
+ return <main className="shell">
+ <aside className={"sidebar "+(mobile?"open":"")}><div className="brand"><div className="brand-mark"><Gamepad2 size={21}/></div><div><b>ESPORTS<span>MANAGER</span></b><small>ORGANIZATION CONTROL</small></div><button className="close-mobile" onClick={()=>setMobile(false)}><X/></button></div><div className="workspace"><div className="workspace-icon">EM</div><div><b>{org}</b><small>Kişisel çalışma alanı</small></div></div>{nav.map((g:any)=><div className="nav-group" key={g[0]}><p>{g[0]}</p>{g[1].map((it:any)=>{const I=it[2];return <button key={it[0]} className={"nav-item "+(active===it[0]?"selected":"")} onClick={()=>{setActive(it[0]);setSearch("");setMobile(false)}}><I size={18}/><span>{it[1]}</span>{it[0]==="reminders"&&pending.length>0&&<i>{pending.length}</i>}</button>})}</div>)}<div className="sidebar-bottom"><div className="help">Kayıtlar bu tarayıcıda saklanır.</div><div className="profile"><div className="avatar">A</div><div><b>Organizasyon sahibi</b><small>Yönetim paneli</small></div></div></div></aside>
+ {mobile&&<div className="scrim" onClick={()=>setMobile(false)}/>}
+ <section className="main"><header className="topbar"><button className="mobile-menu" onClick={()=>setMobile(true)}><Menu/></button><div className="crumb">Çalışma Alanı <span>/</span><b>{title}</b></div><div className="top-actions"><div className="search"><Search size={16}/><input placeholder="Kayıtlarda ara..." value={search} onChange={e=>setSearch(e.target.value)}/></div><button className="icon-btn" onClick={()=>setActive("reminders")}><Bell size={18}/></button><div className="top-avatar">A</div></div></header>
+ <div className="content"><div className="welcome-row"><div><div className="eyebrow">{new Date().toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}).toLocaleUpperCase("tr")}</div><h1>{active==="dashboard"?"Kontrol Merkezi":title}</h1><p>Organizasyonunun tüm operasyonlarını tek yerden yönet.</p></div>{C&&<button className="primary" onClick={()=>add(list)}><Plus size={17}/> Yeni {C.one}</button>}</div>
+ {!ready?<div className="panel">Yükleniyor...</div>:active==="dashboard"?<>
+ <div className="stats"><Stat label="TOPLAM TAKIM" value={db.teams.length} sub="Kayıtlı takım" icon={Shield} tone="violet"/><Stat label="AKTİF OYUNCU" value={db.players.filter(x=>x.status!=="Ayrıldı").length} sub="Kayıtlı oyuncu" icon={Users} tone="blue"/><Stat label="TOPLAM GELİR" value={money(income)} sub="Kayıtlı gelirler" icon={Wallet} tone="green"/><Stat label="TOPLAM GİDER" value={money(expense)} sub={"Net bakiye: "+money(income-expense)} icon={Wallet} tone="red"/></div>
+ <div className="dashboard-grid"><div className="panel wide"><div className="panel-head"><div><h2>Finansal Özet</h2><p>Kaydedilen gelir ve giderler</p></div><button className="text-btn" onClick={()=>setActive("finance")}>Muhasebeye git</button></div><div className="finance-line"><span>Gelir</span><div className="bar-track"><div className="bar income" style={{width:(income+expense?Math.max(2,income/(income+expense)*100):0)+"%"}}/></div><b>{money(income)}</b></div><div className="finance-line"><span>Gider</span><div className="bar-track"><div className="bar expense" style={{width:(income+expense?Math.max(2,expense/(income+expense)*100):0)+"%"}}/></div><b>{money(expense)}</b></div><div className="balance-box"><span>Net bakiye</span><strong>{money(income-expense)}</strong></div></div>
+ <div className="panel"><div className="panel-head"><div><h2>Hatırlatıcılar</h2><p>Bekleyen görevler</p></div><button className="text-btn" onClick={()=>setActive("reminders")}>Tümü</button></div>{pending.length?pending.slice(0,5).map(x=><div className="compact-row" key={x.id}><Bell size={15}/><div><b>{x.title}</b><small>{x.due||"Tarih yok"}</small></div></div>):<Empty text="Bekleyen hatırlatıcı yok."/>}</div>
+ <div className="panel"><div className="panel-head"><div><h2>Takımlarım</h2><p>Organizasyon kadroları</p></div><button className="text-btn" onClick={()=>setActive("teams")}>Tümü</button></div>{db.teams.length?db.teams.slice(0,5).map(x=><div className="compact-row" key={x.id}><div className="team-badge">{String(x.name).slice(0,2).toUpperCase()}</div><div><b>{x.name}</b><small>{x.game}</small></div></div>):<Empty text="Henüz takım eklenmedi." action={()=>add("teams")}/>}</div>
+ <div className="panel"><div className="panel-head"><div><h2>Son işlemler</h2><p>Finans kayıtları</p></div></div>{db.finance.slice(0,5).map(x=><div className="compact-row" key={x.id}><div><b>{x.category}</b><small>{x.date}</small></div><strong>{money(x.amount)}</strong></div>)}{!db.finance.length&&<Empty text="Henüz işlem yok." action={()=>add("finance")}/>}</div></div>
+ </>:active==="settings"?<div className="settings-grid"><div className="panel settings-card"><h2>Çalışma alanı</h2><p>Organizasyon adını değiştir.</p><label>Organizasyon adı</label><input className="field-input" value={org} onChange={e=>setOrg(e.target.value)}/></div><div className="panel settings-card"><h2>Veri yedekleme</h2><p>Verilerini JSON olarak indir veya yedeğini geri yükle.</p><div className="settings-actions"><button className="primary" onClick={backup}><Download size={16}/> Yedeği indir</button><label className="secondary">Yedek yükle <Upload size={16}/><input hidden type="file" accept=".json,application/json" onChange={restore}/></label></div><small className="hint">Tarayıcı verilerini temizlemeden önce yedek al.</small></div><div className="panel settings-card"><h2>Verileri sıfırla</h2><p>Bu tarayıcıdaki tüm kayıtları siler.</p><button className="danger" onClick={()=>{if(confirm("Tüm kayıtlar silinsin mi?"))setDb(blank)}}>Tüm verileri sil</button></div></div>
+ :C?<div className="panel module-panel"><div className="panel-head"><div><h2>{C.title} listesi</h2><p>{rows.length} kayıt gösteriliyor.</p></div><button className="primary small" onClick={()=>add(list)}><Plus size={15}/> Ekle</button></div>{rows.length?<div className="table-wrap"><table><thead><tr>{C.fields.slice(0,5).map((f:any)=><th key={f[0]}>{f[1]}</th>)}<th>İşlemler</th></tr></thead><tbody>{rows.map((r:Row)=><tr key={r.id}>{C.fields.slice(0,5).map((f:any)=><td key={f[0]}>{r[f[0]]||"—"}</td>)}<td><div className="row-actions">{list==="reminders"&&<button className="action-btn" title="Tamamlandı" onClick={()=>setDb(s=>({...s,reminders:s.reminders.map(x=>x.id===r.id?{...x,done:!x.done}:x)}))}><Check size={15}/></button>}<button className="action-btn" title="Düzenle" onClick={()=>{setEdit(r);setModal(list)}}><Pencil size={15}/></button><button className="action-btn delete" title="Sil" onClick={()=>del(list,r.id)}><Trash2 size={15}/></button></div></td></tr>)}</tbody></table></div>:<Empty text={search?"Aramana uygun kayıt yok.":"Henüz kayıt eklenmedi."} action={()=>add(list)}/>}</div>:null}</div></section>
+ {modal&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget){setModal(null);setEdit(null)}}}><form className="modal form-modal" onSubmit={save}><div className="modal-head"><div><h2>{edit?"Kaydı düzenle":"Yeni "+config[modal].one}</h2><p>{config[modal].title} bilgilerini gir.</p></div><button type="button" className="icon-btn" onClick={()=>{setModal(null);setEdit(null)}}><X size={18}/></button></div><div className="form-grid">{config[modal].fields.map((f:any)=><div className="form-field" key={f[0]}><label>{f[1]}</label><input name={f[0]} defaultValue={edit?.[f[0]]||""} placeholder={f[1]} /></div>)}</div><div className="modal-actions"><button type="button" className="secondary" onClick={()=>{setModal(null);setEdit(null)}}>Vazgeç</button><button className="primary" type="submit"><Check size={16}/> Kaydet</button></div></form></div>}
+ {toast&&<div className="toast"><Check size={16}/>{toast}</div>}
+ </main>
 }
+function Stat({label,value,sub,icon:Icon,tone}:any){return <div className="stat-card"><div className="stat-top"><span>{label}</span><div className={"stat-icon "+tone}><Icon size={18}/></div></div><strong>{value}</strong><small>{sub}</small></div>}
+function Empty({text,action}:any){return <div className="empty-small"><span>{text}</span>{action&&<button onClick={action}>İlk kaydı ekle</button>}</div>}
