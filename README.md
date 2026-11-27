@@ -29,3 +29,14 @@ Bu sürüm kayıtları tarayıcının `localStorage` alanında saklar. Aynı tar
 - `npm run build` — üretim derlemesi
 - `npm start` — derlenmiş uygulama
 - `npm run lint` — TypeScript kontrolü
+
+## Ayarlar, profil ve yardım
+- Organizasyon adı, resmî unvan, kısa ad, logo URL'si, ülke, saat dilimi, iletişim ve sosyal bağlantılar.
+- Profil adı, e-posta, telefon, görev ve saat dilimi.
+- Para birimi ve panel vurgu rengi tercihleri, kompakt görünüm.
+- Bildirim tercih anahtarları.
+- JSON dışa aktarma / içe aktarma ve yerel verileri sıfırlama.
+- Modüller için Yardım Merkezi ve sık sorulan sorular.
+
+## Önemli sınırlar
+Profil alanları bir kullanıcı hesabı değildir. Bu sürümde parola, gerçek oturum açma, çok kullanıcılı erişim, sunucu veritabanı senkronizasyonu ve cihazlar arası eşitleme etkin değildir. Kurumsal/kişisel ayarlar ve kayıtlar tarayıcı yerel depolamasında tutulur. Gerçek kullanıma açmadan önce Supabase Auth ve güvenli RLS politikaları tamamlanmalıdır.
