@@ -1,28 +1,31 @@
 # ESPORTS MANAGER
 
-PUBG esports organizasyonun için Türkçe, koyu temalı, mobil uyumlu yönetim paneli başlangıç projesi.
+Türkçe, koyu temalı espor organizasyon yönetim paneli.
 
-## İçerik
-- Next.js uygulama iskeleti
-- Responsive koyu tema dashboard
-- Takım oluşturma arayüzü (şu an demo/local state)
-- Supabase istemci bağlantı noktası
-- Takımlar, oyuncular, muhasebe, envanter, hatırlatıcılar, notlar, turnuvalar ve sözleşmeler için SQL şeması
+## Kurulum
+1. Node.js 20+ kur.
+2. Projeyi indir ve klasörü VS Code ile aç.
+3. Terminalde `npm install` çalıştır.
+4. `npm run dev` komutunu çalıştır.
+5. `http://localhost:3000` adresini aç.
 
-## Yerel çalıştırma
-1. Node.js 20+ kurun.
-2. Proje klasöründe `npm install` çalıştırın.
-3. `.env.example` dosyasını `.env.local` olarak kopyalayın.
-4. Supabase proje URL ve anon key değerlerini girin.
-5. `npm run dev` çalıştırın ve `http://localhost:3000` adresini açın.
+## Modüller
+- Genel Bakış: takım, oyuncu ve finans özeti.
+- Takımlar: kayıt ekleme, düzenleme, silme ve listeleme.
+- Oyuncular: profil, takım, oyun ID, rol, iletişim ve ücret bilgileri.
+- Muhasebe: gelir/gider, kategori, tutar, tarih ve ödeme durumu.
+- İhtiyaç & Envanter: ürün, adet, maliyet, zimmet ve durum takibi.
+- Turnuvalar: organizatör, takım, tarih, katılım ücreti, ödül ve derece.
+- Sözleşmeler: takım/oyuncu, tarih aralığı, ücret ve belge bağlantısı.
+- Hatırlatıcılar: tarihli görev ekleme ve tamamlandı işaretleme.
+- Notlar: not ekleme, düzenleme ve silme.
+- Ayarlar: organizasyon adı, JSON yedek alma/geri yükleme ve verileri sıfırlama.
 
-## Online yayın
-Önerilen yayın: Vercel + Supabase.
-- Supabase'te yeni proje açın.
-- `supabase/schema.sql` dosyasını SQL Editor'da çalıştırın.
-- Supabase Auth ile tek yönetici hesabını kurun.
-- RLS politikalarını yalnızca bu yönetici hesabına izin verecek şekilde tamamlayın.
-- Vercel'e GitHub üzerinden projeyi aktarın ve iki `NEXT_PUBLIC_SUPABASE_*` ortam değişkenini ekleyin.
+## Veri saklama
+Bu sürüm kayıtları tarayıcının `localStorage` alanında saklar. Aynı tarayıcı ve cihazda kalıcıdır; cihazlar arasında otomatik senkronizasyon yapmaz. Tarayıcı verilerini temizlemeden önce Ayarlar bölümünden JSON yedeği indir. Supabase istemci dosyası ve SQL şeması projede bulunur ancak mevcut modüller henüz Supabase'e bağlı değildir. Çok kullanıcılı çevrimiçi veritabanı ve kimlik doğrulama için Supabase Auth, proje anahtarları ve güvenli RLS politikaları ayrıca yapılandırılmalıdır.
 
-## Güvenlik notu
-Bu paket bir başlangıç iskeletidir; henüz canlıya alınmış bir site değildir. Takım/oyuncu/finans kayıt ekranları, Supabase CRUD bağlantıları, yönetici girişi, dosya yükleme ve yedekleme sonraki geliştirme adımlarında tamamlanmalıdır. RLS güvenliği tamamlanmadan gerçek verileri girmeyin. Supabase `service_role` anahtarını asla tarayıcıya veya `NEXT_PUBLIC_` değişkenine koymayın.
+## Komutlar
+- `npm run dev` — geliştirme sunucusu
+- `npm run build` — üretim derlemesi
+- `npm start` — derlenmiş uygulama
+- `npm run lint` — TypeScript kontrolü
